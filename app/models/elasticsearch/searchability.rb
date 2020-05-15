@@ -16,19 +16,19 @@ module Searchability
       settings do
         mapping do
           # fields
-          indexes :id, index: 'not_analyzed', include_in_all: false
-          indexes :class_name, index: 'not_analyzed', include_in_all: false
+          indexes :id, type: 'keyword'
+          indexes :class_name, type: 'keyword'
           indexes :title
-          indexes :date_received, type: 'date', include_in_all: false
-          indexes :rescinded, type: 'boolean', include_in_all: false
-          indexes :spam, type: 'boolean', include_in_all: false
-          indexes :published, type: 'boolean', include_in_all: false
-          indexes :hidden, type: 'boolean', include_in_all: false
+          indexes :date_received, type: 'date'
+          indexes :rescinded, type: 'boolean'
+          indexes :spam, type: 'boolean'
+          indexes :published, type: 'boolean'
+          indexes :hidden, type: 'boolean'
           indexes :tag_list
           indexes :jurisdiction_list
-          indexes :action_taken, analyzer: 'keyword'
-          indexes :request_type, analyzer: 'keyword'
-          indexes :mark_registration_number, analyzer: 'keyword'
+          indexes :action_taken, type: 'keyword'
+          indexes :request_type, type: 'keyword'
+          indexes :mark_registration_number, type: 'keyword'
           indexes :sender_name
           indexes :principal_name
           indexes :submitter_name
@@ -38,18 +38,18 @@ module Searchability
           indexes :works, type: 'object'
 
           # facets
-          indexes :sender_name_facet, include_in_all: false, type: 'keyword'
-          indexes :principal_name_facet, include_in_all: false, type: 'keyword'
-          indexes :submitter_name_facet, include_in_all: false, type: 'keyword'
-          indexes :submitter_country_code_facet, include_in_all: false, type: 'keyword'
-          indexes :tag_list_facet, include_in_all: false, type: 'keyword'
-          indexes :jurisdiction_list_facet, include_in_all: false, type: 'keyword'
-          indexes :recipient_name_facet, include_in_all: false, type: 'keyword'
-          indexes :country_code_facet, include_in_all: false, type: 'keyword'
-          indexes :language_facet, include_in_all: false, type: 'keyword'
-          indexes :action_taken_facet, include_in_all: false, type: 'keyword'
-          indexes :topic_facet, include_in_all: false, type: 'keyword'
-          indexes :date_received_facet, include_in_all: false, type: 'date'
+          indexes :sender_name_facet, type: 'keyword'
+          indexes :principal_name_facet, type: 'keyword'
+          indexes :submitter_name_facet, type: 'keyword'
+          indexes :submitter_country_code_facet, type: 'keyword'
+          indexes :tag_list_facet, type: 'keyword'
+          indexes :jurisdiction_list_facet, type: 'keyword'
+          indexes :recipient_name_facet, type: 'keyword'
+          indexes :country_code_facet, type: 'keyword'
+          indexes :language_facet, type: 'keyword'
+          indexes :action_taken_facet, type: 'keyword'
+          indexes :topic_facet, type: 'keyword'
+          indexes :date_received_facet, type: 'date'
         end
       end
 

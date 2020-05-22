@@ -50,6 +50,7 @@ class NoticesController < ApplicationController
         format.json { head :created, location: @notice }
         format.html { redirect_to :root, notice: 'Notice created!' }
       else
+        Rails.logger.warn "Could not create notice with params: #{params}"
         format.html  { render :new }
         format.json  { render json: @notice.errors, status: :unprocessable_entity }
       end

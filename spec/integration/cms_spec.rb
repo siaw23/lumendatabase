@@ -213,7 +213,7 @@ feature 'CMS blog entries' do
   context 'user' do
     it 'reads a blog entry' do
       BlogPostFactory.new(@site, @layout, @blog).manufacture
-      blog_entry = @blog.children.last
+      blog_entry = @blog.children.all.last
 
       visit '/blog_entries'
       click_on cms_fragment_content('title', blog_entry)
@@ -223,7 +223,7 @@ feature 'CMS blog entries' do
 
     it 'opens a blog entry from the home page' do
       BlogPostFactory.new(@site, @layout, @blog).manufacture
-      blog_entry = @blog.children.last
+      blog_entry = @blog.children.all.last
 
       visit '/'
       click_on cms_fragment_content('title', blog_entry)
@@ -251,7 +251,7 @@ feature 'CMS blog entries' do
     it 'contains the latest content' do
       visit '/blog_feed.rss'
 
-      @blog.children.last(10).each do |post|
+      @blog.children.all.last(10).each do |post|
         expect(page).to have_content cms_fragment_content('title', post)
         expect(page).to have_content cms_fragment_content('author', post)
         expect(page).to have_content post.created_at.to_s(:rfc822)

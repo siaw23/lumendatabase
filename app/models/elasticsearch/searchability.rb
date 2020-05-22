@@ -5,6 +5,18 @@ module Searchability
     base.extend ClassMethods
   end
 
+  # Default fields to search with a multimatch query. Weights some of the
+  # fields, based purely on intuition from reading logs.
+  # Before Elasticsearch 6.x this was an `_all` query, but `_all` is no longer
+  # supported. These MULTI_MATCH_FIELDS match what we actually included in
+  # `_all` via our elasticsearch mapping.
+  MULTI_MATCH_FIELDS = %w(
+    title^2 tag_list jurisdiction_list request_type mark_registration_number
+    sender_name^2 principal_name submitter_name submitter_country_code
+    recipient_name^2 subject body topics.name works.description^4
+    works.infringing_urls.url works.copyrighted_urls.url
+  )
+
   module ClassMethods
     def define_elasticsearch_mapping(exclusions = {})
       index_name [Rails.application.engine_name,
@@ -24,6 +36,8 @@ module Searchability
           indexes :spam, type: 'boolean'
           indexes :published, type: 'boolean'
           indexes :hidden, type: 'boolean'
+          indexes :subject
+          indexes :body
           indexes :tag_list
           indexes :jurisdiction_list
           indexes :action_taken, type: 'keyword'
@@ -34,8 +48,18 @@ module Searchability
           indexes :submitter_name
           indexes :submitter_country_code
           indexes :recipient_name
-          indexes :topics, type: 'object'
-          indexes :works, type: 'object'
+          indexes :topics do
+            indexes :name
+          end
+          indexes :works do
+            indexes :description
+            indexes :infringing_urls do
+              indexes :url
+            end
+            indexes :copyrighted_urls do
+              indexes :url
+            end
+          end
 
           # facets
           indexes :sender_name_facet, type: 'keyword'

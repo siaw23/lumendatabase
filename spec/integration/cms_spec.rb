@@ -92,8 +92,7 @@ feature 'CMS blog entries' do
     end
 
     it 'displays metadata' do
-      BlogPostFactory.new(@site, @layout, @blog).manufacture
-      post = @blog.children.first
+      post = new_post
 
       visit @blog.full_path
 
@@ -104,8 +103,8 @@ feature 'CMS blog entries' do
     end
 
     it 'displays formatted html' do
-      BlogPostFactory.new(@site, @layout, @blog).manufacture
-      post = @blog.children.first
+      post = new_post
+
       expect(cms_fragment_content('abstract', post)).to include('<p>')
 
       visit @blog.full_path
@@ -129,9 +128,7 @@ feature 'CMS blog entries' do
 
   context 'post' do
     it 'loads a blog entry' do
-      BlogPostFactory.new(@site, @layout, @blog).manufacture
-
-      post = @blog.children.first
+      post = new_post
       visit post.full_path
 
       image = cms_fragment_content('image', post)
@@ -144,8 +141,8 @@ feature 'CMS blog entries' do
     end
 
     it 'displays formatted html' do
-      BlogPostFactory.new(@site, @layout, @blog).manufacture
-      post = @blog.children.first
+      post = new_post
+
       expect(cms_fragment_content('content', post)).to include('<p>')
 
       visit post.full_path
@@ -153,8 +150,7 @@ feature 'CMS blog entries' do
     end
 
     it 'routes original_news_ids' do
-      BlogPostFactory.new(@site, @layout, @blog).manufacture
-      post = @blog.children.first
+      post = new_post
 
       parent = Comfy::Cms::Page.create(
                                   site: @site,
@@ -212,8 +208,7 @@ feature 'CMS blog entries' do
 
   context 'user' do
     it 'reads a blog entry' do
-      BlogPostFactory.new(@site, @layout, @blog).manufacture
-      blog_entry = @blog.children.all.last
+      blog_entry = new_post
 
       visit '/blog_entries'
       click_on cms_fragment_content('title', blog_entry)
@@ -222,8 +217,7 @@ feature 'CMS blog entries' do
     end
 
     it 'opens a blog entry from the home page' do
-      BlogPostFactory.new(@site, @layout, @blog).manufacture
-      blog_entry = @blog.children.all.last
+      blog_entry = new_post
 
       visit '/'
       click_on cms_fragment_content('title', blog_entry)
@@ -277,5 +271,11 @@ feature 'CMS blog entries' do
 
   def have_custom_search_engine_embed
     have_css('.blog-search')
+  end
+
+  def new_post
+    BlogPostFactory.new(@site, @layout, @blog).manufacture
+    @blog.children.reload # critical to avoid intermittent failures
+    @blog.children.first
   end
 end
